@@ -15,7 +15,7 @@ const logger = winston.createLogger({
     winston.format.splat(),
     winston.format.json()
   ),
-  defaultMeta: { service: "marocrent-api" },
+  defaultMeta: { service: "taxi-connect-api" },
   transports: [
     // Write all logs with level 'error' and below to error.log
     new winston.transports.File({ filename: "logs/error.log", level: "error" }),

@@ -71,7 +71,7 @@ const createApp = (): Express => {
 
   // Base route - can be removed in production
   app.get("/", (req, res) => {
-    res.send("MarocRent API is running");
+    res.send("Taxi-Connect API is running");
   });
 
   // Health check endpoint
