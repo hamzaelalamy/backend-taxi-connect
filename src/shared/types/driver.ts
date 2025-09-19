@@ -6,11 +6,9 @@ export interface IDriver extends Document {
     licenseNumber: string;
     licenseExpiryDate: Date;
     cin: string;
-    vehicleRegistration: string;
     vehicleMake: string;
     vehicleModel: string;
     vehicleYear: number;
-    vehicleColor: string;
     vehiclePlateNumber: string;
     city: string;
     verificationStatus: 'pending' | 'approved' | 'rejected' | 'suspended';
