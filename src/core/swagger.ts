@@ -7,14 +7,14 @@ const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "MarocRent API",
+      title: "Taxi-Connect API",
       version: "1.0.0",
       description:
-        "API documentation for MarocRent - Car Rental Platform for Morocco",
+        "API documentation for Taxi-Connect - Taxi rides Platform for Morocco",
       contact: {
         name: "API Support",
-        url: "https://marocrent.com/support",
-        email: "support@marocrent.com",
+        url: "https://taxi-connect.com/support",
+        email: "support@taxi-connect.com",
       },
     },
     servers: [
@@ -23,7 +23,7 @@ const swaggerOptions = {
         description: "Development server",
       },
       {
-        url: "https://api.marocrent.com",
+        url: "https://api.taxi-connect.com",
         description: "Production server",
       },
     ],
@@ -49,7 +49,7 @@ try {
   swaggerSpec = {
     openapi: "3.0.0",
     info: {
-      title: "MarocRent API",
+      title: "Taxi-Connect API",
       version: "1.0.0",
       description: "API documentation not fully generated yet",
     },
