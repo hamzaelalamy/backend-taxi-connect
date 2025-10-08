@@ -16,7 +16,7 @@ import {
 } from "./shared/middlewares/errorHandler";
 
 // Import service routes
-// import authRoutes from "./services/auth/routes";
+import authRoutes from './services/auth/routes/auth';
 // import carRoutes from "./services/cars/routes";
 // import locationRoutes from "./services/locations/routes";
 // import userRoutes from "./services/users/routes";
@@ -90,7 +90,7 @@ const createApp = (): Express => {
   });
 
   // Mount service routes
-  // app.use("/api/auth", authRoutes);
+  app.use('/api/v1/auth', authRoutes);
   // app.use("/api/cars", carRoutes); // Monter les routes des voitures
   // app.use("/api/locations", locationRoutes);
   // app.use("/api/users", userRoutes);
