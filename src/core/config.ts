@@ -1,4 +1,5 @@
 // src/core/config.ts
+
 import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
@@ -12,7 +13,7 @@ interface Config {
   port: number;
   mongoUri: string;
   jwtSecret: string;
-  jwtExpiresIn: string;
+  jwtExpiresIn: string | number;
   corsOrigin: string | string[];
   maxFileSize: number;
   uploadDir: string;
@@ -21,7 +22,6 @@ interface Config {
 // Check required environment variables
 const requiredEnvs = ["MONGO_URI", "JWT_SECRET"];
 const missingEnvs = requiredEnvs.filter((env) => !process.env[env]);
-
 if (missingEnvs.length > 0) {
   throw new Error(`Missing required environment variables: ${missingEnvs.join(", ")}`);
 }
