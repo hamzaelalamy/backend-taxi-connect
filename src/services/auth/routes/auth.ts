@@ -2,20 +2,20 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
 import * as authController from '../controllers/authController';
-import { validateRequest } from '../../../shared/middlewares/validateRequest';
-import { authenticateToken } from '../../../shared/middlewares/auth';
+import validateRequest from '../../../shared/middlewares/validateRequest';
+import { protect } from '../../../shared/middlewares/authMiddleware';
 import { rateLimiter } from '../../../shared/middlewares/rateLimiter';
 
 const router = Router();
 
 /**
- * @route   POST /auth/request-otp
- * @desc    Request OTP for phone number
- * @access  Public
+ * PUBLIC ROUTES (No authentication required)
  */
+
+// Request OTP
 router.post(
   '/request-otp',
-  rateLimiter.otpRequest, // Rate limit OTP requests
+  rateLimiter.otpRequest,
   [
     body('phoneNumber')
       .matches(/^\+212[5-7]\d{8}$/)
@@ -25,14 +25,10 @@ router.post(
   authController.requestOTP
 );
 
-/**
- * @route   POST /auth/verify-otp
- * @desc    Verify OTP and login/register user
- * @access  Public
- */
+// Verify OTP
 router.post(
   '/verify-otp',
-  rateLimiter.otpVerification, // Rate limit OTP verification
+  rateLimiter.otpVerification,
   [
     body('phoneNumber')
       .matches(/^\+212[5-7]\d{8}$/)
@@ -46,14 +42,27 @@ router.post(
   authController.verifyOTP
 );
 
+// Refresh token
+router.post(
+  '/refresh-token',
+  rateLimiter.tokenRefresh,
+  [
+    body('token')
+      .notEmpty()
+      .withMessage('Token is required'),
+  ],
+  validateRequest,
+  authController.refreshToken
+);
+
 /**
- * @route   POST /auth/complete-profile
- * @desc    Complete user profile after registration
- * @access  Private
+ * PROTECTED ROUTES (Authentication required)
  */
+
+// Complete profile
 router.post(
   '/complete-profile',
-  authenticateToken,
+  protect,
   [
     body('firstName')
       .isLength({ min: 2, max: 50 })
@@ -73,14 +82,10 @@ router.post(
   authController.completeProfile
 );
 
-/**
- * @route   POST /auth/register-driver
- * @desc    Register as driver (submit verification documents)
- * @access  Private
- */
+// Register driver
 router.post(
   '/register-driver',
-  authenticateToken,
+  protect,
   [
     body('licenseNumber')
       .isLength({ min: 5, max: 20 })
@@ -111,21 +116,13 @@ router.post(
   authController.registerDriver
 );
 
-/**
- * @route   GET /auth/profile
- * @desc    Get current user profile
- * @access  Private
- */
-router.get('/profile', authenticateToken, authController.getProfile);
+// Get profile
+router.get('/profile', protect, authController.getProfile);
 
-/**
- * @route   PUT /auth/profile
- * @desc    Update user profile
- * @access  Private
- */
+// Update profile
 router.put(
   '/profile',
-  authenticateToken,
+  protect,
   [
     body('firstName')
       .optional()
@@ -148,35 +145,10 @@ router.put(
   authController.updateProfile
 );
 
-/**
- * @route   POST /auth/refresh-token
- * @desc    Refresh JWT token
- * @access  Public
- */
-router.post(
-  '/refresh-token',
-  rateLimiter.tokenRefresh, // Rate limit token refresh
-  [
-    body('token')
-      .notEmpty()
-      .withMessage('Token is required'),
-  ],
-  validateRequest,
-  authController.refreshToken
-);
+// Logout
+router.post('/logout', protect, authController.logout);
 
-/**
- * @route   POST /auth/logout
- * @desc    Logout user
- * @access  Private
- */
-router.post('/logout', authenticateToken, authController.logout);
-
-/**
- * @route   GET /auth/me
- * @desc    Check auth status (verify token)
- * @access  Private
- */
-router.get('/me', authenticateToken, authController.checkAuth);
+// Check auth status
+router.get('/me', protect, authController.checkAuth);
 
 export default router;
